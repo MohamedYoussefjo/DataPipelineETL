@@ -1,4 +1,4 @@
-# DataPipelineETL By Mohamed Youssef Jouin and Youssef Alouane 
+# DataPipelineETL By Mohamed Youssef Jouini and Youssef Alouane 
 !!!!!!!!!! Still the security phase is not implemented properly ( ssl/TLS , authentication , authorization )  ((Version 1.0) next version + Security enhanced
 This is our data pipeline for Orange Tunisia
 ## First things First :
