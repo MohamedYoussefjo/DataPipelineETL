@@ -6,38 +6,21 @@
 
 ## Initial Setup
 
-### 1. Environment Configuration
+### 1. Launch the Pipeline
 
-Create `.env` file in the same directory as `docker-compose.yml`:
-echo "HOST_IP=$(hostname -I | awk '{print $1}')" > .env
-echo "postgresuser=airflow" >> .env
-echo "postgrespassword=youssef" >> .env
-echo "postgresdbname=airflow" >> .env
-echo "redispassword=youssef" >> .env
-echo "webserverseckey=youssef" >> .env
-echo "fernetkey=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=" >> .env
+Execute setup.sh as administrator (use stronger passwords for production change the passwords in the setup.sh)
 
-### 2. Launch the Pipeline
+--Airflow Configuration
 
-sudo su
+--Access the webserver at: http://localhost:8080
 
-docker-compose up -d
+--Spark Connection Setup
 
-chmod -R 777 ./
+--Go to Connections tab
 
-Alternative: Execute setup.sh as administrator (use stronger passwords for production)
+--Set host to: spark://[YOUR_MACHINE_IP] (never use localhost)
 
-Airflow Configuration
-
-Access the webserver at: http://localhost:8080
-
-Spark Connection Setup
-
-Go to Connections tab
-
-Set host to: spark://[YOUR_MACHINE_IP] (never use localhost)
-
-Set port to: 7077
+--Set port to: 7077
 
 ## DAGs Schedule
 
@@ -51,33 +34,58 @@ CSV Processor	Every 30 minutes	Processes CSV files
 
 
 ##Directory Structure
+
 ├── Gzip/
-│   ├── gzipinput/    # Primary input directory
+
+│   ├── gzipinput/
+
 │   ├── gzipcomplet/
+
 │   ├── gzipbackup/
+
 │   ├── jsoncoming/
+
 │   ├── jsondone/
+
 │   ├── jsonbackup/
+
 │   ├── xmlbackup/
+
 │   ├── xmlcoming/
+
 │   └── xmldone/
+
 ├── xmlonly/
-│   ├── xmlin/        # Primary input directory
+
+│   ├── xmlin/ 
+
 │   ├── xmldone/
+
 │   ├── xmlbackup/
+
 │   ├── jsonout/
+
 │   ├── jsondone/
+
 │   └── jsonbackup/
+
 ├── dags/
 │   ├── processproduce.py
+
 │   ├── dag.py
+
 │   ├──-mydag.py
+
 │   
 │ 
-├── mypy/            
+├── mypy/     
+
 ├── csv/
-│   ├── inputcsv/     # Primary input directory
+
+│   ├── inputcsv/ 
+
 │   ├── jobdone/
+
 │   └── backups/
 
 
