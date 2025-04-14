@@ -15,8 +15,9 @@ echo "fernetkey=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=" >> .env
 we go to the directory after pulling it from my repository 
 then we do : (we assume that  docker-compose is installed by : sudo apt-get install docker-compose )
 ### sudo su 
-Then we need to give execute , read  , write permissions to all users (without complication)
 ### docker-compose up -d 
+### chmod -R 777 ./
+U can just execute the script setup.sh as administrator (SUDO) to all that bet we need to change the environment variables with strong passwords 
 ## Now we need to configure the connection between the webserve http://localhost:8080
 we go to connections tab and we specify host : spark://ipaddressofthemachine!!!!!! if we put localhost it resolves to the webserver ip 
 and we specify the port to 7077 
