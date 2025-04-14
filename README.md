@@ -39,6 +39,9 @@ CSV Processor	Every 30 minutes	Processes CSV files
 
 ## Directory Structure
 
+
+
+
 ├── Gzip/
 │   ├── gzipinput/    # Primary input directory
 │   ├── gzipcomplet/
