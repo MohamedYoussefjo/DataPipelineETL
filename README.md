@@ -20,14 +20,23 @@ echo "fernetkey=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=" >> .env
 ### 2. Launch the Pipeline
 
 sudo su
+
 docker-compose up -d
+
 chmod -R 777 ./
+
 Alternative: Execute setup.sh as administrator (use stronger passwords for production)
+
 Airflow Configuration
+
 Access the webserver at: http://localhost:8080
+
 Spark Connection Setup
+
 Go to Connections tab
+
 Set host to: spark://[YOUR_MACHINE_IP] (never use localhost)
+
 Set port to: 7077
 
 ## DAGs Schedule
