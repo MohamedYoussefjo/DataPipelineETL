@@ -7,9 +7,8 @@
 ## Initial Setup
 
 ### 1. Environment Configuration
-Create `.env` file in the same directory as `docker-compose.yml`:
 
-```bash
+Create `.env` file in the same directory as `docker-compose.yml`:
 echo "HOST_IP=$(hostname -I | awk '{print $1}')" > .env
 echo "postgresuser=airflow" >> .env
 echo "postgrespassword=youssef" >> .env
@@ -19,6 +18,7 @@ echo "webserverseckey=youssef" >> .env
 echo "fernetkey=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=" >> .env
 
 ### 2. Launch the Pipeline
+
 sudo su
 docker-compose up -d
 chmod -R 777 ./
@@ -31,13 +31,13 @@ Set host to: spark://[YOUR_MACHINE_IP] (never use localhost)
 Set port to: 7077
 
 ## DAGs Schedule
+
 DAG Name	Frequency	Description
 XML Processor	Every 1 minute	Processes XML files
 Gzip Extractor	Every 15 minutes	Extracts XML from Gzip files
 CSV Processor	Every 30 minutes	Processes CSV files
 
-##Directory Structure
-
+## Directory Structure
 
 ├── Gzip/
 │   ├── gzipinput/    # Primary input directory
