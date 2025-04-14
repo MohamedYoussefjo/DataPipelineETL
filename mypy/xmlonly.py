@@ -2,6 +2,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, to_json, struct, when, input_file_name
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 import os
+import hashlib
 import shutil
 from datetime import datetime
 from glob import glob
@@ -14,10 +15,27 @@ def ensure_dirs(*dirs):
         os.makedirs(d, exist_ok=True)
 
 def backup_file(src_path, backup_dir):
-    """Create timestamped backup copy"""
+    """Create timestamped backup copy with duplicate prevention"""
     if not os.path.exists(src_path):
         return False
     
+    # Get file content hash to detect duplicates
+    with open(src_path, 'rb') as f:
+        file_content = f.read()
+    file_hash = hashlib.md5(file_content).hexdigest()
+    
+    # Check for existing backups with same content
+    existing_backups = glob(os.path.join(backup_dir, f"backup_*_{os.path.basename(src_path)}"))
+    for backup in existing_backups:
+        try:
+            with open(backup, 'rb') as f:
+                if hashlib.md5(f.read()).hexdigest() == file_hash:
+                    print(f"Duplicate detected - skipping backup for {src_path}")
+                    return False
+        except:
+            continue
+    
+    # Create new backup if no duplicates found
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     filename = os.path.basename(src_path)
     backup_path = os.path.join(backup_dir, f"backup_{timestamp}_{filename}")

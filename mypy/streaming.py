@@ -3,6 +3,7 @@ from pyspark.sql.functions import col, to_json, struct, when, input_file_name
 from pyspark.sql.types import StructType, StructField, StringType, IntegerType
 import os
 import shutil
+import hashlib
 from datetime import datetime
 from glob import glob
 
@@ -14,17 +15,41 @@ def ensure_dirs(*dirs):
         os.makedirs(d, exist_ok=True)
 
 def backup_file(src_path, backup_dir):
-    """Create timestamped backup copy"""
+    """Create timestamped backup copy with duplicate prevention"""
     if not os.path.exists(src_path):
+        print(f"Source file not found: {src_path}")
         return False
     
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = os.path.basename(src_path)
-    backup_path = os.path.join(backup_dir, f"backup_{timestamp}_{filename}")
-    
-    shutil.copy2(src_path, backup_path)
-    print(f"Created backup: {backup_path}")
-    return True
+    try:
+        # Calculate file hash for duplicate detection
+        with open(src_path, 'rb') as f:
+            file_hash = hashlib.md5(f.read()).hexdigest()
+        
+        filename = os.path.basename(src_path)
+        
+        # Check for existing backups with same content
+        existing_backups = glob(os.path.join(backup_dir, f"backup_*_{filename}"))
+        for backup in existing_backups:
+            try:
+                with open(backup, 'rb') as f:
+                    if hashlib.md5(f.read()).hexdigest() == file_hash:
+                        print(f"Duplicate content detected - skipping backup for {filename}")
+                        return True  # Considered "success" but no new backup created
+            except Exception as e:
+                print(f"Error checking existing backup {backup}: {str(e)}")
+                continue
+        
+        # Create new backup if no duplicates found
+        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        backup_path = os.path.join(backup_dir, f"backup_{timestamp}_{filename}")
+        
+        shutil.copy2(src_path, backup_path)
+        print(f"Created backup: {backup_path}")
+        return True
+        
+    except Exception as e:
+        print(f"Error creating backup for {src_path}: {str(e)}")
+        return False
 
 def move_to_processed(src_path, processed_dir):
     """Move file to processed with timestamp"""
