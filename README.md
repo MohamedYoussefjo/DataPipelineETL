@@ -33,9 +33,13 @@ Set port to: 7077
 ## DAGs Schedule
 
 DAG Name	Frequency	Description
+
 XML Processor	Every 1 minute	Processes XML files
+
 Gzip Extractor	Every 15 minutes	Extracts XML from Gzip files
+
 CSV Processor	Every 30 minutes	Processes CSV files
+
 
 ##Directory Structure
 ├── Gzip/
