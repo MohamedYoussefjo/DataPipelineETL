@@ -67,3 +67,34 @@ CSV Processor	Every 30 minutes	Processes CSV files
 │   ├── inputcsv/     # Primary input directory
 │   ├── jobdone/
 │   └── backups/
+
+
+
+Create these topics via Kafdrop (http://localhost:8900) if missing:
+
+xmlt_fast : XML processing stream
+
+xmlt : Gzip extraction pipeline
+
+csv : CSV processing (requires specific header format)
+
+Security Considerations
+Current Development Setup (⚠️ Not for production):
+
+Default password: "youssef" for all services
+
+Hardcoded Fernet key
+
+Permissions set to 777 (insecure)
+
+Planned Security Upgrades:
+
+End-to-end SSL/TLS encryption
+
+Role-based authentication
+
+Fine-grained authorization
+
+Secrets management system
+
+Secure permission model (755/644)
