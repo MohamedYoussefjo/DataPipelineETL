@@ -33,7 +33,7 @@ Gzip Extractor	Every 15 minutes	Extracts XML from Gzip files
 CSV Processor	Every 30 minutes	Processes CSV files
 
 
-##Directory Structure
+## Directory Structure
 
 ├── Gzip/
 
