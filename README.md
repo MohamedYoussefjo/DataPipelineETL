@@ -18,32 +18,27 @@ echo "redispassword=youssef" >> .env
 echo "webserverseckey=youssef" >> .env
 echo "fernetkey=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=" >> .env
 
-2. Launch the Pipeline
-bash
-Copy
+### 2. Launch the Pipeline
 sudo su
 docker-compose up -d
 chmod -R 777 ./
 Alternative: Execute setup.sh as administrator (use stronger passwords for production)
-
 Airflow Configuration
 Access the webserver at: http://localhost:8080
-
-Spark Connection Setup:
+Spark Connection Setup
 Go to Connections tab
-
 Set host to: spark://[YOUR_MACHINE_IP] (never use localhost)
-
 Set port to: 7077
 
-DAGs Schedule
+## DAGs Schedule
 DAG Name	Frequency	Description
 XML Processor	Every 1 minute	Processes XML files
 Gzip Extractor	Every 15 minutes	Extracts XML from Gzip files
 CSV Processor	Every 30 minutes	Processes CSV files
-Directory Structure
-Copy
-DataPipelineETL/
+
+##Directory Structure
+
+
 ├── Gzip/
 │   ├── gzipinput/    # Primary input directory
 │   ├── gzipcomplet/
@@ -54,7 +49,7 @@ DataPipelineETL/
 │   ├── xmlbackup/
 │   ├── xmlcoming/
 │   └── xmldone/
-├── XMLonly/
+├── xmlonly/
 │   ├── xmlin/        # Primary input directory
 │   ├── xmldone/
 │   ├── xmlbackup/
@@ -62,19 +57,13 @@ DataPipelineETL/
 │   ├── jsondone/
 │   └── jsonbackup/
 ├── dags/
-│   ├── csv_processor.py
-│   ├── xml_processor.py
-│   ├── gzip_processor.py
-│   ├── preprocessing.py
-│   └── kafka_sender.py
-├── mypy/             # Custom scripts
+│   ├── processproduce.py
+│   ├── dag.py
+│   ├──-mydag.py
+│   
+│ 
+├── mypy/            
 ├── csv/
 │   ├── inputcsv/     # Primary input directory
 │   ├── jobdone/
 │   └── backups/
-└── logs/
-    ├── spark_connections/
-    ├── spark_jobs/
-    ├── stages/
-    ├── warnings/
-    └── errors/
