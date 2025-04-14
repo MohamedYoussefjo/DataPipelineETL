@@ -1,160 +1,47 @@
-DataPipelineETL
-By Mohamed Youssef Jouini and Youssef Alouane
-Version 1.0
-
-Important Security Notice:
-❗ This version lacks proper SSL/TLS, authentication, and authorization. Security enhancements planned for next release.
-
-Initial Setup
-1. Create .env File
-Run these commands where docker-compose.yml is located:
-
-Copy
-echo "HOST_IP=$(hostname -I | awk '{print $1}')" > .env  
-echo "postgresuser=airflow" >> .env  
-echo "postgrespassword=youssef" >> .env  
-echo "postgresdbname=airflow" >> .env  
-echo "redispassword=youssef" >> .env  
-echo "webserverseckey=youssef" >> .env  
+# DataPipelineETL By Mohamed Youssef Jouini and Youssef Alouane 
+!!!!!!!!!! Still the security phase is not implemented properly ( ssl/TLS , authentication , authorization )  ((Version 1.0) next version + Security enhanced
+This is our data pipeline for Orange Tunisia
+## First things First :
+we need to create .env file where the docker-compose file is located 
+so we execute these commands over here :
+echo "HOST_IP=$(hostname -I | awk '{print $1}')" > .env
+echo "postgresuser=airflow" >> .env
+echo "postgrespassword=youssef" >> .env
+echo "postgresdbname=airflow" >> .env
+echo "redispassword=youssef" >> .env
+echo "webserverseckey=youssef" >> .env
 echo "fernetkey=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=" >> .env
-2. Launch the Pipeline
-After pulling the repository:
-
-Copy
-sudo su  
-docker-compose up -d  
-chmod -R 777 ./
-Alternatively execute setup.sh as administrator
-
-Airflow Configuration
-Access webserver at: http://localhost:8080
-
-Spark Connection Setup:
-
-Go to Connections tab
-
-Set host to: spark://[YOUR_MACHINE_IP] (not localhost)
-
-Set port to: 7077
-
-DAGs Schedule
-DAG 1: Runs every 1 minute (XML files processing)
-
-DAG 2: Runs every 15 minutes (Gzip to XML extraction)
-
-DAG 3: Runs every 30 minutes (CSV files processing)
-
-Folder Structure
-Main Directories:
-Gzip/
-
-XMLonly/
-
-dags/ (Airflow DAGs)
-
-mypy/ (Execution scripts)
-
-csv/
-
-logs/
-
-Subdirectories:
-Gzip/
-
-gzipinput/ (input data)
-
-gzipcomplet/
-
-gzipbackup/
-
-jsoncoming/
-
-jsondone/
-
-jsonbackup/
-
-xmlbackup/
-
-xmlcoming/
-
-xmldone/
-
-XMLonly/
-
-xmlin/ (input data)
-
-xmldone/
-
-xmlbackup/
-
-jsonout/
-
-jsondone/
-
-jsonbackup/
-
-dags/
-
-csv_processor.py
-
-xml_processor.py
-
-gzip_processor.py
-
-preprocessing.py
-
-kafka_sender.py
-
-csv/
-
-inputcsv/ (input data)
-
-jobdone/
-
-backups/
-
-logs/
-
-spark_connections/
-
-spark_jobs/
-
-stages/
-
-warnings/
-
-errors/
-
-Kafka Topics
-Create these topics via Kafdrop (http://localhost:8900) if they don't exist:
-
-xmlt_fast (for first DAG)
-
-xmlt (for second DAG)
-
-csv (for CSV files with specific header)
-
-Security Warning
-Current version uses default credentials for development only:
-
-All passwords set to "youssef"
-
-Hardcoded Fernet key
-
-Production requires:
-
-Strong password generation
-
-SSL/TLS implementation
-
-Proper authentication
-
-Secure file permissions (avoid 777)
-
-Next Version Plans:
-
-Enhanced security implementation
-
-Proper secret management
-
-Production-ready configuration
+## After that : 
+we go to the directory after pulling it from my repository 
+then we do : (we assume that  docker-compose is installed by : sudo apt-get install docker-compose )
+### sudo su 
+### docker-compose up -d 
+### chmod -R 777 ./
+U can just execute the script setup.sh as administrator (SUDO) to all that bet we need to change the environment variables with strong passwords 
+## Now we need to configure the connection between the webserve http://localhost:8080
+we go to connections tab and we specify host : spark://ipaddressofthemachine!!!!!! if we put localhost it resolves to the webserver ip 
+and we specify the port to 7077 
+## We Have 3 dags 
+### 1 dag :  run every 1 minute same as the time of generation of data (xml files only)
+### 2 dag :  run every 15 minute (Gzip to xml extraction )
+### 3 dag :  run every 30 minute  (Csv files )
+# OUR fOLDERS Tree : 
+We have 5  main Folders : Gzip ,   xmlonly , dags for airflow dags , mypy for our scripts executed by the dags and csv folder ,logs for logging 
+inside Gzip we find :
+**gzipinput(input of our data ),gzipcomplet,gzipbackup,jsoncoming,jsondone,jsonbackup,xmlbackup,xmlcoming,xmldone
+inside XMLonly we find : 
+**xmlin(input of our data,xmldone,xmlbackup,jsonout,jsondone,jsonbackup 
+inside dags we find :
+***3 files each responsible for each  file extension(csv,xml,gzip)  + preprocessing  + after that we send data to kafka broker 
+inside mypy we find :
+**our scripts that will be executed by the dags but according to our specs of the machine we need to change the configuration down in the files 
+inside csv Folder : 
+**inputcsv(input of our data here),jobdone,backups 
+inside the logs folder :
+**we find everything related to the connection to spark , the spark-job , the stages , warnings , errors etc ... 
+# THE Topics  
+We have 3 topics : 
+-xmlt_fast for the first dag only for xml files 
+-xmlt for the second dag gzip files 
+-csv for the csv files with a specific header 
+If not created we create them from kafdrop http://localhost:8900
