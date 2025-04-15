@@ -78,7 +78,11 @@ and we specify the port to 7077
 
 # THE Topics  
 We have 3 topics : 
+
 -xmlt_fast for the first dag only for xml files 
+
 -xmlt for the second dag gzip files 
+
 -csv for the csv files with a specific header 
+
 If not created we create them from kafdrop http://localhost:8900 
