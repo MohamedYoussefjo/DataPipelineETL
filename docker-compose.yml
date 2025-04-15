@@ -84,6 +84,8 @@ services:
 
   logstash:
     container_name: logstash
+    env_file:
+      - .env
     image: bitnami/logstash:latest
     restart: always
     depends_on:
