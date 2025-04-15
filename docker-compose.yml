@@ -22,7 +22,7 @@ services:
       test: ["CMD-SHELL", "kafka-topics.sh --list --bootstrap-server localhost:9092 || exit 1"]
       interval: 5s
       timeout: 10s
-      retries: 5
+      retries: 10
     networks:
       - elk
   
