@@ -6,6 +6,13 @@ import hashlib
 import shutil
 from datetime import datetime
 from glob import glob
+import socket 
+
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+ip=s.getsockname()[0]
+s.close()
 
 def get_config_value(spark, key):
     return spark.sparkContext.getConf().get("spark.driver.extraJavaOptions", "").split(f"-D{key}=")[-1].split(" ")[0]
@@ -62,6 +69,15 @@ def main():
         .appName("JSON-to-Kafka-Stream") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5") \
         .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "true") \
+        .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5") \
+        .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "true") \
+        .config("spark.sql.files.maxPartitionBytes", "128MB") \
+        .config("spark.sql.shuffle.partitions", "4")\
+        .config("spark.executor.instances", "1")\
+        .config("spark.executor.memory", "2g")  \
+        .config("spark.driver.memory", "2g") \
+        .config("spark.executor.cores", "2")\
+        .config("spark.task.maxFailures", "4")\
         .getOrCreate()
 
     # Get config values
@@ -112,7 +128,7 @@ def main():
           .select(to_json(struct([col(c) for c in df.columns if c != "input_file"])).alias("value"))
           .write
           .format("kafka")
-          .option("kafka.bootstrap.servers", "192.168.253.129:9092")
+          .option("kafka.bootstrap.servers", f"{ip}:9092")
           .option("topic", "xmlt_fast")
           .save()
         )

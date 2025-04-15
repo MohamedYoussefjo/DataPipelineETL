@@ -7,13 +7,21 @@ import hashlib
 from datetime import datetime
 from glob import glob
 import atexit
+import socket 
+
+
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+ip=s.getsockname()[0]
+s.close()
 
 # ===== Configuration =====
 INPUT_DIR = "/app/csv/inputcsv"
 PROCESSED_DIR = "/app/csv/jobdone"
 BACKUP_DIR = "/app/csv/backups"
 CHECKPOINT_DIR = "/app/csv/check50"
-KAFKA_BROKER = "192.168.253.129:9092"
+KAFKA_BROKER = f"{ip}:9092"
 KAFKA_TOPIC = "csv"
 
 # Ensure directories exist
