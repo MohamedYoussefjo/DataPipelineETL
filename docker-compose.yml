@@ -177,7 +177,8 @@ services:
       - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://${postgresuser}:${postgrespassword}@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
       - AIRFLOW__WEBSERVER__SECRET_KEY=${webserverseckey}
-      - AIRFLOW__CORE__FERNET_KEY=${fernetkey}        
+      - AIRFLOW__CORE__FERNET_KEY=${fernetkey}  
+      - AIRFLOW_CONN_SPARK_DEFAULT='spark://${HOST_IP}:7077?deploy-mode=client&spark_binary=spark-submit'      
       - AIRFLOW__CORE__DONOT_PICKLE=false
     volumes:
       - ./dags:/opt/airflow/dags

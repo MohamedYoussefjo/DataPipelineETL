@@ -18,6 +18,8 @@ mkdir -p \
   xmlonly/{xmlin,xmldone,xmlbackup,jsonout,jsondone,jsonbackup} \
   csv/{inputcsv,jobdone,backups} \
 
+chmod -R 777 ./ 
+
 docker-compose up -d 
 
 chmod -R 777 ./
