@@ -92,7 +92,7 @@ If not created we create them from kafdrop http://localhost:8900
 
 # Finally 
 
-jut we put our files in the input directory 
+just we put our files in the input directory 
 
 
 # Visualisation 
