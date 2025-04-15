@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+from airflow.sensors.filesystem import FileSensor
 
 default_args = {
     'owner': 'airflow',
@@ -13,17 +14,17 @@ default_args = {
 }
 
 dag = DAG(
-    '6gbfiletokafka',
+    'csv_to_kafka',
     default_args=default_args,
     description='Process CSV files to Kafka and move processed files',
-    schedule_interval='*/30 * * * *', # Runs once per day
+    schedule_interval=None, 
     catchup=False,
     max_active_runs=1,
 )
 
 spark_job = SparkSubmitOperator(
     task_id='process_csv_to_kafka',
-    application='/app/mypy/preprocessproduce.py',  # Update this path
+    application='/app/mypy/preprocessproduce.py',  
     conn_id='spark_default',
     verbose=True,
     conf={
@@ -32,21 +33,13 @@ spark_job = SparkSubmitOperator(
         'spark.executor.memory': '1g',
         'spark.executor.cores': '1',
         'spark.executor.instances': '1',
-        'spark.sql.streaming.checkpointLocation': '/app/checkpoint1firstcsv',
+        'spark.sql.streaming.checkpointLocation': '/app/csv/checkpointcsv',
     },
     dag=dag,
 )
 
 # Optional: Add a sensor to check if files exist before processing
-from airflow.sensors.filesystem import FileSensor
 
-file_sensor = FileSensor(
-    task_id='check_for_files',
-    filepath='/app/inputcsv/*.csv',  # Adjust pattern as needed
-    poke_interval=60,  # Check every 60 seconds
-    timeout=3600,  # Timeout after 1 hour
-    mode='reschedule',
-    dag=dag,
-)
 
-file_sensor >> spark_job
+
+spark_job

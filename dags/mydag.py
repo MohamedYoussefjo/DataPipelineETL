@@ -248,9 +248,10 @@ spark_task = SparkSubmitOperator(
     conn_id='spark_default',
     packages='org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5',
     conf={
-        'spark.sql.streaming.forceDeleteTempCheckpointLocation': 'true',
+        'spark.sql.streaming.forceDeleteTempCheckpointLocation': 'false',
         'spark.executor.memory': '1g',
         'spark.driver.memory': '1g',
+        'spark.executor.instances:' : '1',
         'spark.driver.extraJavaOptions': 
             f'-Djson.input.dir={config["json_output_dir"]} '
             f'-Djson.processed.dir={config["json_processed_dir"]} '
