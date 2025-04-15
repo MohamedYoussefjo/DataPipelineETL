@@ -12,6 +12,13 @@ import shutil
 import gzip
 from glob import glob
 import time
+import socket
+
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+ip=s.getsockname()[0]
+s.close()
 
 default_args = {
     'owner': 'youssef',
@@ -46,7 +53,7 @@ config = {
     'json_backup_dir': '/app/xmlonly/jsonbackup',
     
     # Kafka config
-    'kafka_bootstrap': '192.168.253.129:9092',
+    'kafka_bootstrap': f'{ip}:9092',
     'kafka_topic': 'xmlt_fast',
     
     # XML namespace
