@@ -3,7 +3,7 @@
 This is our data pipeline for Orange Tunisia
 ## First things First :
 Execute the script setup.sh as administrator 
-
+but we need to change the passwords to strong ones 
 
 
 
