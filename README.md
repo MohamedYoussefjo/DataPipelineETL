@@ -8,9 +8,11 @@ Execute the script setup.sh as administrator
 but we need to change the passwords to strong ones and generate another fernet key in the setup.sh 
 
 
-## Now we need to configure the connection between the webserver  http://localhost:8080 and spark master (web UI http://localhost:9090)
-we go to connections tab and we specify host : spark://ipaddressofthemachine!!!!!! if we put localhost it resolves to the webserver ip 
-and we specify the port to 7077 
+## Our UI intefaces :
+localhost:9090 spark UI 
+localhost:8900 kafdrop 
+localhost:8080 airflow webserver
+localhost:5601 Kibana
 
 
 ## We Have 3 dags 
