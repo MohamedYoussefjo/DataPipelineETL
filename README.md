@@ -79,7 +79,7 @@ and we specify the port to 7077
 
 
 
-# THE Topics  
+# The Topics  
 We have 3 topics : 
 
 -xmlt_fast for the first dag only for xml files 
