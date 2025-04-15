@@ -17,7 +17,7 @@ and we specify the port to 7077
 
 
 
-# OUR fOLDERS Tree :
+# Our folders Tree :
 ── gzip/
 
 │   ├── gzipinput/   
