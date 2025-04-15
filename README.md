@@ -67,7 +67,7 @@ and we specify the port to 7077
 
 │   ├── xmlonly.py  
 
-│   ├── streaming.py
+│   ├── streaming.py      (  in every producer here we need to specify the configuration of our spark-submit according to our infrastructure )
 
 │   ├── preprocessproduce.py
 
