@@ -1,10 +1,11 @@
 # DataPipelineETL By Mohamed Youssef Jouini and Youssef Alouane 
 !!!!!!!!!! Still the security phase is not implemented properly ( ssl/TLS , authentication , authorization )  ((Version 1.0) next version + Security enhanced
 This is our data pipeline for Orange Tunisia
+
+
 ## First things First :
 Execute the script setup.sh as administrator 
 but we need to change the passwords to strong ones and generate another fernet key is the setup.sh 
-
 
 
 ## Now we need to configure the connection between the webserver  http://localhost:8080 and spark master
@@ -92,3 +93,8 @@ If not created we create them from kafdrop http://localhost:8900
 # Finally 
 
 jut we put our files in the input directory 
+
+
+# Visualisation 
+
+we go to h http://localhost:5601 and we go stack management and we create index patterns then we create our dashboard there 
