@@ -16,7 +16,7 @@ dag = DAG(
     '6gbfiletokafka',
     default_args=default_args,
     description='Process CSV files to Kafka and move processed files',
-    schedule_interval='*/30 * * * *  # Runs once per day
+    schedule_interval='*/30 * * * *', # Runs once per day
     catchup=False,
     max_active_runs=1,
 )
