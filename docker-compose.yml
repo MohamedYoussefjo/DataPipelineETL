@@ -14,7 +14,7 @@ services:
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=1@kafka:9093
       - KAFKA_CFG_LISTENERS=PLAINTEXT://:9092,CONTROLLER://:9093
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
-      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://192.168.253.129:9092
+      - KAFKA_CFG_ADVERTISED_LISTENERS=PLAINTEXT://${HOST_IP}:9092
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     volumes:
       - kafka-data:/kafka
@@ -32,7 +32,7 @@ services:
     ports:
       - "8900:9000"
     environment:
-      - KAFKA_BROKERCONNECT=192.168.253.129:9092
+      - KAFKA_BROKERCONNECT=${HOST_IP}:9092
     depends_on:
       - kafka 
     networks:
@@ -103,9 +103,9 @@ services:
     image: postgres:16
     container_name: airflow_postgres
     environment:
-      - POSTGRES_USER=airflow
-      - POSTGRES_PASSWORD=youssef  # Change in production!
-      - POSTGRES_DB=airflow
+      - POSTGRES_USER=${postgresuser}
+      - POSTGRES_PASSWORD=${postgrespassword}  # Change in production!
+      - POSTGRES_DB=${postgresdbname}
     volumes:
       - postgresss_data:/var/lib/postgresql/data
     healthcheck:
@@ -119,7 +119,7 @@ services:
   redis:
     image: redis:7.2-alpine
     container_name: airflow_redis
-    command: redis-server --requirepass youssef --save 60 1 --loglevel warning
+    command: redis-server --requirepass ${redispassword} --save 60 1 --loglevel warning
     environment:
       - REDIS_PASSWORD=youssef
     healthcheck:
@@ -136,7 +136,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://airflow:youssef@postgres/airflow
+      AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${postgresuser}:${postgrespassword}@postgres/airflow
     command: >
       bash -c "
       until airflow db check; do
@@ -170,12 +170,12 @@ services:
         condition: service_healthy
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:youssef@postgres/airflow
-      - AIRFLOW__CELERY__BROKER_URL=redis://:youssef@redis:6379/0
-      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://airflow:youssef@postgres/airflow
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${postgresuser}:${postgrespassword}@postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://:${redispassword}@redis:6379/0
+      - AIRFLOW__CELERY__RESULT_BACKEND=db+postgresql://${postgresuser}:${postgrespassword}@postgres/airflow
       - AIRFLOW__CORE__LOAD_EXAMPLES=false
-      - AIRFLOW__WEBSERVER__SECRET_KEY=youssef
-      - AIRFLOW__CORE__FERNET_KEY=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=        
+      - AIRFLOW__WEBSERVER__SECRET_KEY=${webserverseckey}
+      - AIRFLOW__CORE__FERNET_KEY=${fernetkey}        
       - AIRFLOW__CORE__DONOT_PICKLE=false
     volumes:
       - ./dags:/opt/airflow/dags
@@ -204,10 +204,10 @@ services:
         condition: service_healthy
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:youssef@postgres/airflow
-      - AIRFLOW__CELERY__BROKER_URL=redis://:youssef@redis:6379/0
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${postgresuser}:${postgrespassword}@postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://:${redispassword}@redis:6379/0
       - AIRFLOW__SCHEDULER__SCHEDULE_AFTER_TASK_EXECUTION=false
-      - AIRFLOW__CORE__FERNET_KEY=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=
+      - AIRFLOW__CORE__FERNET_KEY=${fernetkey} 
     volumes:
       - ./dags:/opt/airflow/dags
       - ./logs:/opt/airflow/logs
@@ -225,9 +225,9 @@ services:
       - airflow-scheduler
     environment:
       - AIRFLOW__CORE__EXECUTOR=CeleryExecutor
-      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:youssef@postgres/airflow
-      - AIRFLOW__CELERY__BROKER_URL=redis://:youssef@redis:6379/0
-      - AIRFLOW__CORE__FERNET_KEY=FIEQwFNkIf20aJVQ3seBdK4_vDX7qaGT9xy9MvGDNKY=
+      - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://${postgresuser}:${postgrespassword}@postgres/airflow
+      - AIRFLOW__CELERY__BROKER_URL=redis://:${redispassword}@redis:6379/0
+      - AIRFLOW__CORE__FERNET_KEY=${fernetkey}
       - AIRFLOW__CELERY__WORKER_CONCURRENCY=4  
     volumes:
       - ./dags:/opt/airflow/dags
@@ -243,8 +243,8 @@ services:
     container_name: airflow_flower
     restart: unless-stopped
     environment:
-      - AIRFLOW__CELERY__BROKER_URL=redis://:youssef@redis:6379/0
-      - FLOWER_BROKER_API=redis://:youssef@redis:6379/0
+      - AIRFLOW__CELERY__BROKER_URL=redis://:${redispassword}@redis:6379/0
+      - FLOWER_BROKER_API=redis://:${redispassword}@redis:6379/0
     ports:
       - "5555:5555"
     depends_on:
@@ -258,7 +258,7 @@ services:
     command: >
       bash -c "
       echo 'Waiting for Redis...';
-      celery --broker=redis://:youssef@redis:6379/0 flower "
+      celery --broker=redis://:${redispassword}@redis:6379/0 flower "
     networks:
       - elk
 
