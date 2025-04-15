@@ -10,10 +10,10 @@ from glob import glob
 from datetime import datetime
 
 # Directory configuration
-INPUT_DIR = "/app/inputcsv"
-PROCESSED_DIR = "/app/jobdone"
-BACKUP_DIR = "/app/backups"  # New backup directory
-CHECKPOINT_DIR = "/app/check50"
+INPUT_DIR = "/app/csv/inputcsv"
+PROCESSED_DIR = "/app/csv/jobdone"
+BACKUP_DIR = "/app/csv/backups"  # New backup directory
+CHECKPOINT_DIR = "/app/csv/check50"
 
 def ensure_dirs(*dirs):
     """Ensure directories exist"""
