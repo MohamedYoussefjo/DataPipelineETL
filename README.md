@@ -7,7 +7,7 @@ but we need to change the passwords to strong ones and generate another fernet k
 
 
 
-## Now we need to configure the connection between the webserve http://localhost:8080
+## Now we need to configure the connection between the webserver  http://localhost:8080 and spark master
 we go to connections tab and we specify host : spark://ipaddressofthemachine!!!!!! if we put localhost it resolves to the webserver ip 
 and we specify the port to 7077 
 ## We Have 3 dags 
