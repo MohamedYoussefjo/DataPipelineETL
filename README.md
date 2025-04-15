@@ -88,3 +88,7 @@ We have 3 topics :
 -csv for the csv files with a specific header 
 
 If not created we create them from kafdrop http://localhost:8900 
+
+# Finally 
+
+jut we put our files in the input directory 
