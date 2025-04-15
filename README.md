@@ -19,35 +19,60 @@ and we specify the port to 7077
 
 # OUR fOLDERS Tree :
 ── gzip/
-│   ├── gzipinput/       # Input of our data
+
+│   ├── gzipinput/   
+
 │   ├── gzipcomplet/
+
 │   ├── gzipbackup/
+
 │   ├── jsoncoming/
+
 │   ├── jsondone/
+
 │   ├── jsonbackup/
+
 │   ├── xmlbackup/
+
 │   ├── xmlcoming/
+
 │   └── xmldone/
+
 ├──xmlonly/
-│   ├── xmlin/           # Input of our data
+
+│   ├── xmlin/ 
+
 │   ├── xmldone/
+
 │   ├── xmlbackup/
+
 │   ├── jsonout/
+
 │   ├── jsondone/
+
 │   └── jsonbackup/
-├── dags/                # Airflow DAGs
+
+├── dags/        
+
 │   ├──dag.py
+
 │   ├── mydag.py
+
 │   ├── 1ercsvprocess.py
 ├── mypy/
-│   ├── xmlonly.py  # Scripts executed by DAGs
-│   ├── streaming.py
-│   ├── preprocessproduce.py
-├── csv/
-│   ├── inputcsv/        # Input of our data
-│   ├── jobdone/
-│   └── backups/
 
+│   ├── xmlonly.py  
+
+│   ├── streaming.py
+
+│   ├── preprocessproduce.py
+
+├── csv/
+│   ├── inputcsv/       
+
+│   ├── jobdone/
+
+│   └── backups/
 
 
 
