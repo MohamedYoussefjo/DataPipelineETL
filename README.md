@@ -59,7 +59,7 @@ and we specify the port to 7077
 
 │   ├──dag.py
 
-│   ├── mydag.py
+│   ├── mydag.py  (  in every dag here we need to specify the configuration of our spark-submit according to our infrastructure we find it in the spark-job section down  )
 
 │   ├── 1ercsvprocess.py
 
@@ -67,7 +67,7 @@ and we specify the port to 7077
 
 │   ├── xmlonly.py  
 
-│   ├── streaming.py      (  in every producer here we need to specify the configuration of our spark-submit according to our infrastructure )
+│   ├── streaming.py      
 
 │   ├── preprocessproduce.py
 
