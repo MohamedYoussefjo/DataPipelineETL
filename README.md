@@ -9,9 +9,13 @@ but we need to change the passwords to strong ones and generate another fernet k
 
 
 ## Our UI intefaces :
+
 localhost:9090 spark UI 
+
 localhost:8900 kafdrop 
+
 localhost:8080 airflow webserver
+
 localhost:5601 Kibana
 
 
