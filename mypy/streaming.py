@@ -72,15 +72,13 @@ def move_to_processed(src_path, processed_dir):
 
 def main():
     spark = SparkSession.builder \
-        .appName("JSON-to-Kafka-Stream") \
+        .appName("gzip-to-Kafka-Stream") \
         .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5") \
-        .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "true") \
+        .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "false") \
+        .config("spark.streaming.stopGracefullyOnShutdown", "true")\
         .config("spark.sql.files.maxPartitionBytes", "128MB") \
         .config("spark.sql.shuffle.partitions", "4")\
-        .config("spark.executor.instances", "1")\
-        .config("spark.executor.memory", "2g")  \
-        .config("spark.driver.memory", "2g") \
-        .config("spark.executor.cores", "2")\
+        .config("spark.executor.memory", "1g")  \
         .config("spark.task.maxFailures", "4")\
         .getOrCreate()
 
@@ -132,7 +130,7 @@ def main():
           .select(to_json(struct([col(c) for c in df.columns if c != "input_file"])).alias("value"))
           .write
           .format("kafka")
-          .option("kafka.bootstrap.servers", f"{ip}:9092")
+          .option("kafka.bootstrap.servers", "kafka:9092")
           .option("topic", "xmlt")
           .save()
         )
