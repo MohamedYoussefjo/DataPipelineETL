@@ -18,6 +18,8 @@ localhost:8080 airflow webserver
 
 localhost:5601 Kibana
 
+localhost:5555 Flower (to watch for airflow status )
+
 
 ## We Have 3 dags 
 ### 1 dag :  run every 1 minute same as the time of generation of data (xml files only)
