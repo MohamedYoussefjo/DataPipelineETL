@@ -4,7 +4,7 @@ This is our data pipeline for Orange Tunisia
 
 
 ## First things First :
-Execute the script setup.sh as administrator 
+Execute the script setup.sh as administrator and give it execute : chmod +x setup.sh 
 but we need to change the passwords to strong ones and generate another fernet key in the setup.sh 
 
 
