@@ -9,8 +9,8 @@ default_args = {
     'start_date': datetime(2023, 3, 30),
     'email_on_failure': False,
     'email_on_retry': False,
-    'retries': 1,
-    'retry_delay': timedelta(minutes=5),
+    'retries': 3,
+    'retry_delay': timedelta(minutes=1),
 }
 
 dag = DAG(
@@ -29,11 +29,8 @@ spark_job = SparkSubmitOperator(
     verbose=True,
     conf={
         'spark.jars.packages': 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5',
-        'spark.driver.memory': '1g',
-        'spark.executor.memory': '1g',
-        'spark.executor.cores': '1',
-        'spark.executor.instances': '1',
-        'spark.sql.streaming.checkpointLocation': '/app/csv/checkpointcsv',
+        "spark.executor.cores": "1",
+        "spark.cores.max": "1"
     },
     dag=dag,
 )

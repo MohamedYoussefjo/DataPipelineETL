@@ -45,7 +45,7 @@ dag = DAG(
 config = {
     # GZIP paths
     'gzip_input_dir': '/app/gzip/gzipinput',
-    'gzip_complete_dir': '/app/gzip/gzcomplet',
+    'gzip_complete_dir': '/app/gzip/gzipcomplet',
     'gzip_backup_dir': '/app/gzip/gzipbackup',
     
     # XML paths
@@ -59,7 +59,7 @@ config = {
     'json_backup_dir': '/app/gzip/jsonbackup',
     
     # Kafka config
-    'kafka_bootstrap': f'{ip}:9092',
+    'kafka_bootstrap': 'kafka:9092',
     'kafka_topic': 'xmlt',
     
     # XML namespace
@@ -257,9 +257,8 @@ spark_task = SparkSubmitOperator(
     packages='org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5',
     conf={
         'spark.sql.streaming.forceDeleteTempCheckpointLocation': 'false',
-        'spark.executor.memory': '1g',
-        'spark.driver.memory': '1g',
-        'spark.executor.instances:' : '1',
+        "spark.executor.cores": "1",
+        "spark.cores.max": "1",
         'spark.driver.extraJavaOptions': 
             f'-Djson.input.dir={config["json_output_dir"]} '
             f'-Djson.processed.dir={config["json_processed_dir"]} '
