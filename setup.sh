@@ -1,5 +1,9 @@
 #!/bin/bash
 
+apt update 
+
+apt upgrade 
+
 
 cat > .env <<EOF
 HOST_IP=$(hostname -I | awk '{print $1}')
@@ -19,6 +23,8 @@ mkdir -p \
   csv/{inputcsv,jobdone,backups} \
 
 chmod -R 777 ./ 
+
+sudo apt-get install docker-compose 
 
 docker-compose up -d 
 
