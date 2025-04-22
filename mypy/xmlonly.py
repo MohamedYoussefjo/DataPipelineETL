@@ -142,7 +142,7 @@ def main():
         .withColumn("input_file", input_file_name())
 
     # Start streaming query
-    query = streaming_df.writeStream.foreachBatch(process_batch).option("checkpointLocation", checkpoint_dir).start()
+    query = streaming_df.writeStream.foreachBatch(process_batch).option("checkpointLocation", checkpoint_dir).trigger(once=True).start()
 
     # Wait for completion
     query.awaitTermination()
