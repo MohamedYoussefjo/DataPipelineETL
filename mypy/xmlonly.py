@@ -89,6 +89,7 @@ def main():
         StructField("beginTime", StringType(), nullable=False),
         StructField("endTime", StringType(), nullable=False),
         StructField("measObjLdn", StringType(), nullable=False),
+        StructField("nodeid", StringType(), nullable=False),
         StructField("kpiId", StringType(), nullable=False),
         StructField("kpiName", StringType(), nullable=False),
         StructField("kpiValue", StringType(), nullable=False)
@@ -142,7 +143,7 @@ def main():
         .withColumn("input_file", input_file_name())
 
     # Start streaming query
-    query = streaming_df.writeStream.foreachBatch(process_batch).option("checkpointLocation", checkpoint_dir).trigger(once=True).start()
+    query = streaming_df.writeStream.foreachBatch(process_batch).option("checkpointLocation", checkpoint_dir).trigger(Once=True).start()
 
     # Wait for completion
     query.awaitTermination()
