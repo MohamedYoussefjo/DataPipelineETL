@@ -106,6 +106,13 @@ def process_xml_files(**kwargs):
 
                 for meas_value in meas_info.findall('ns:measValue', config['namespace']):
                     meas_obj_ldn = meas_value.get('measObjLdn')
+                    # Extract nodeid from measObjLdn (first element after 'ManagedElement=')
+                    nodeid = None
+                    if meas_obj_ldn:
+                        parts = meas_obj_ldn.split(',')
+                        if parts and '=' in parts[0]:
+                            nodeid = parts[0].split('=')[1]
+                    
                     for r in meas_value.findall('ns:r', config['namespace']):
                         kpi_id = r.get('p')
                         combined_data.append({
@@ -115,6 +122,7 @@ def process_xml_files(**kwargs):
                             'beginTime': begin_time,
                             'endTime': end_time,
                             'measObjLdn': meas_obj_ldn,
+                            'nodeid': nodeid,  # New field added here
                             'kpiId': kpi_id,
                             'kpiName': meas_types.get(kpi_id, 'Unknown'),
                             'kpiValue': r.text
@@ -128,7 +136,7 @@ def process_xml_files(**kwargs):
             backup_filename = os.path.basename(filename)  # Keep original name (e.g., "data.xml")
             backup_path = os.path.join(config['xml_backup_dir'], backup_filename)
 
-	    # Handle duplicates by adding a counter
+            # Handle duplicates by adding a counter
             counter = 1
             while os.path.exists(backup_path):
                 base, ext = os.path.splitext(backup_filename)
@@ -142,15 +150,14 @@ def process_xml_files(**kwargs):
         except Exception as e:
             print(f"Error processing {filename}: {str(e)}")
             continue
-    
-    # Write combined JSON file
+
+    # Save combined JSON
     if combined_data:
-        with open(combined_json_path, 'w', encoding='utf-8') as f:
-            json.dump(combined_data, f, indent=4)
-        print(f"Created {combined_filename} with {len(combined_data)} records")
+        with open(combined_json_path, 'w') as f:
+            json.dump(combined_data, f, indent=2)
+        print(f"Saved combined data to {combined_filename}")
     
     return processed_count
-
 def check_files_processed(**kwargs):
     """Determine whether to run Spark or skip"""
     ti = kwargs['ti']
