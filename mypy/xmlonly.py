@@ -1,6 +1,6 @@
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import col, to_json, struct, when, input_file_name
-from pyspark.sql.types import StructType, StructField, StringType, IntegerType
+from pyspark.sql.types import StructType, StructField, StringType, IntegerType , DoubleType
 import os
 import hashlib
 import shutil
@@ -92,7 +92,7 @@ def main():
         StructField("nodeid", StringType(), nullable=False),
         StructField("kpiId", StringType(), nullable=False),
         StructField("kpiName", StringType(), nullable=False),
-        StructField("kpiValue", StringType(), nullable=False)
+        StructField("kpiValue", StringType(), nullable=True)
     ])
 
     # Track processed files
@@ -118,7 +118,7 @@ def main():
             backup_file(clean_path, json_backup_dir)
         
         # Transform and write to Kafka
-        (df.withColumn("kpiValue", when(col("kpiValue") == "NIL", 0).otherwise(col("kpiValue").cast("integer")))
+        (df.withColumn("kpiValue", when(col("kpiValue") == "NIL", 0).otherwise(col("kpiValue").cast("double")))
           .select(to_json(struct([col(c) for c in df.columns if c != "input_file"])).alias("value"))
           .write
           .format("kafka")
@@ -143,7 +143,7 @@ def main():
         .withColumn("input_file", input_file_name())
 
     # Start streaming query
-    query = streaming_df.writeStream.foreachBatch(process_batch).option("checkpointLocation", checkpoint_dir).trigger(Once=True).start()
+    query = streaming_df.writeStream.foreachBatch(process_batch).option("checkpointLocation", checkpoint_dir).trigger(once=True).start()
 
     # Wait for completion
     query.awaitTermination()
