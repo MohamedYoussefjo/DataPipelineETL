@@ -55,9 +55,7 @@ config = {
     # Kafka config
     'kafka_bootstrap': 'kafka:9092',
     'kafka_topic': 'xmlt_fast',
-    
-    # XML namespace
-    'namespace': {'ns': 'http://www.3gpp.org/ftp/specs/archive/32_series/32.435#measCollec'},
+  
 }
 
 def ensure_directories_exist():
@@ -69,52 +67,55 @@ def ensure_directories_exist():
         os.makedirs(dir_path, exist_ok=True)
 
 def process_xml_files(**kwargs):
-    """Convert XML files to timestamped JSON"""
+    """Convert XML files to timestamped JSON with robust handling"""
     ensure_directories_exist()
     processed_count = 0
     combined_data = []
     
-    # Generate unique timestamped filename
+    # Namespace definition
+    NS = {'ns': 'http://www.3gpp.org/ftp/specs/archive/32_series/32.435#measCollec'}
+    
+    # Generate output filename
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
     combined_filename = f"combined_{timestamp}.json"
     combined_json_path = os.path.join(config['json_output_dir'], combined_filename)
-    xml_files = glob(os.path.join(config['xml_input_dir'], '*.xml'))
     
-    if not xml_files:
-        print("No XML files found to process")
-        return 0
-
-    for xml_path in xml_files:
+    for xml_path in glob(os.path.join(config['xml_input_dir'], '*.xml')):
         try:
             filename = os.path.basename(xml_path)
-            
-            # XML to JSON conversion
             tree = ET.parse(xml_path)
             root = tree.getroot()
             
-            begin_time = root.find('ns:fileHeader/ns:measCollec', config['namespace']).get('beginTime')
+            # Get file-level metadata
+            file_header = root.find('ns:fileHeader', NS)
+            begin_time = file_header.find('ns:measCollec', NS).get('beginTime')
             
-            for meas_info in root.findall('ns:measData/ns:measInfo', config['namespace']):
+            # Process each measurement block
+            for meas_info in root.findall('ns:measData/ns:measInfo', NS):
+                # Get measurement metadata
                 meas_info_id = meas_info.get('measInfoId')
-                job_id = meas_info.find('ns:job', config['namespace']).get('jobId')
-                gran_period = meas_info.find('ns:granPeriod', config['namespace']).get('duration')
-                end_time = meas_info.find('ns:granPeriod', config['namespace']).get('endTime')
-
-                meas_types = {}
-                for meas_type in meas_info.findall('ns:measType', config['namespace']):
-                    meas_types[meas_type.get('p')] = meas_type.text
-
-                for meas_value in meas_info.findall('ns:measValue', config['namespace']):
+                job_id = meas_info.find('ns:job', NS).get('jobId')
+                gran_period = meas_info.find('ns:granPeriod', NS).get('duration')
+                end_time = meas_info.find('ns:granPeriod', NS).get('endTime')
+                
+                # Map position codes to KPI names
+                meas_types = {
+                    mt.get('p'): mt.text 
+                    for mt in meas_info.findall('ns:measType', NS)
+                }
+                
+                # Process each measurement value
+                for meas_value in meas_info.findall('ns:measValue', NS):
                     meas_obj_ldn = meas_value.get('measObjLdn')
-                    # Extract nodeid from measObjLdn (first element after 'ManagedElement=')
-                    nodeid = None
-                    if meas_obj_ldn:
-                        parts = meas_obj_ldn.split(',')
-                        if parts and '=' in parts[0]:
-                            nodeid = parts[0].split('=')[1]
+                    nodeid = meas_obj_ldn.split('=')[1].split(',')[0] if meas_obj_ldn else None
                     
-                    for r in meas_value.findall('ns:r', config['namespace']):
+                    for r in meas_value.findall('ns:r', NS):
                         kpi_id = r.get('p')
+                        raw_value = r.text
+                        
+                        # Handle "NIL" values by converting to 0
+                        kpi_value = 0 if raw_value == "NIL" else raw_value
+                        
                         combined_data.append({
                             'measInfoId': meas_info_id,
                             'jobId': job_id,
@@ -122,42 +123,37 @@ def process_xml_files(**kwargs):
                             'beginTime': begin_time,
                             'endTime': end_time,
                             'measObjLdn': meas_obj_ldn,
-                            'nodeid': nodeid,  # New field added here
+                            'nodeid': nodeid,
                             'kpiId': kpi_id,
-                            'kpiName': meas_types.get(kpi_id, 'Unknown'),
-                            'kpiValue': r.text
+                            'kpiName': meas_types.get(kpi_id, f'UNKNOWN_{kpi_id}'),
+                            'kpiValue': kpi_value,
+                            'sourceFile': filename  # Track origin file
                         })
             
-            # Move processed XML
+            # Move and backup processed file
             processed_path = os.path.join(config['xml_processed_dir'], filename)
             shutil.move(xml_path, processed_path)
             
-            # Create XML backup
-            backup_filename = os.path.basename(filename)  # Keep original name (e.g., "data.xml")
-            backup_path = os.path.join(config['xml_backup_dir'], backup_filename)
-
-            # Handle duplicates by adding a counter
-            counter = 1
-            while os.path.exists(backup_path):
-                base, ext = os.path.splitext(backup_filename)
-                backup_path = os.path.join(config['xml_backup_dir'], f"{base}_{counter}{ext}")
-                counter += 1
-            shutil.copy2(processed_path, backup_path)
+            # Create timestamped backup
+            backup_name = f"{timestamp}_{filename}"
+            shutil.copy2(processed_path, os.path.join(config['xml_backup_dir'], backup_name))
             
             processed_count += 1
-            print(f"Processed {filename}")
+            print(f"Processed {filename} successfully")
             
         except Exception as e:
-            print(f"Error processing {filename}: {str(e)}")
+            print(f"ERROR processing {filename}: {str(e)}")
             continue
 
-    # Save combined JSON
+    # Save combined output
     if combined_data:
         with open(combined_json_path, 'w') as f:
             json.dump(combined_data, f, indent=2)
-        print(f"Saved combined data to {combined_filename}")
+        print(f"Saved {len(combined_data)} records to {combined_filename}")
     
     return processed_count
+    
+    
 def check_files_processed(**kwargs):
     """Determine whether to run Spark or skip"""
     ti = kwargs['ti']
