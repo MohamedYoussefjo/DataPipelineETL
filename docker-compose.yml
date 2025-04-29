@@ -111,7 +111,7 @@ services:
       - POSTGRES_PASSWORD=${postgrespassword}  # Change in production!
       - POSTGRES_DB=${postgresdbname}
     volumes:
-      - postgresss_data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U airflow"]
       interval: 10s
@@ -131,6 +131,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    volumes:
+      -redis-data:
     networks:
       - elk
       
@@ -340,8 +342,7 @@ volumes:
     driver: local
   kafka-data:
     driver: local
-  postgresss_data:
-    driver: local
+
 
 networks:
   elk:
