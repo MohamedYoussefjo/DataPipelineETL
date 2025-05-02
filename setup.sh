@@ -21,6 +21,7 @@ mkdir -p \
   gzip/{gzipinput,gzipcomplet,gzipbackup,jsoncoming,jsondone,jsonbackup,xmlbackup,xmlcoming,xmldone} \
   xmlonly/{xmlin,xmldone,xmlbackup,jsonout,jsondone,jsonbackup} \
   csv/{inputcsv,jobdone,backups} \
+  xmlhard/{xmlin,xmldone,xmlbackup,jsonout,jsondone,jsonbackup} 
 
 chmod -R 777 ./ 
 
