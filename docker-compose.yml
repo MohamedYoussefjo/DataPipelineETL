@@ -132,7 +132,7 @@ services:
       timeout: 5s
       retries: 5
     volumes:
-      -redis-data:
+      - redis-data:
     networks:
       - elk
       
