@@ -131,8 +131,6 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
-    volumes:
-      - redis-data:
     networks:
       - elk
       
@@ -335,8 +333,6 @@ volumes:
   elasticsearch-data-volume:
     driver: local
   postgres-data:
-    driver: local
-  redis-data:
     driver: local
   spark-data:
     driver: local
