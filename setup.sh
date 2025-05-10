@@ -33,6 +33,10 @@ docker-compose up -d
 
 chmod -R 777 ./
 
+cd DataPipelineETL
+
+docker build -t airflou:latest .
+
 echo "Environment setup complete!"
 echo "Created:"
 echo "1. .env file with your specified variables"
