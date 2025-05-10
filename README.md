@@ -25,6 +25,7 @@ localhost:5555 Flower (to watch for airflow status )
 ### 1 dag :  run every 1 minute same as the time of generation of data (xml files only)
 ### 2 dag :  run every 15 minute (Gzip to xml extraction )
 ### 3 dag :  run every trigger (trigger when there is a csv file to process )  (Csv files )
+### 4 dag :  run every 1 min (trigger when there is a xml hardware files )  (xml files)
 
 
 
@@ -97,6 +98,8 @@ We have 3 topics :
 -xmlt for the second dag gzip files 
 
 -csv for the csv files with a specific header 
+
+-xmlhard for xml files to mintor server status 
 
 If not created we create them from kafdrop http://localhost:8900 
 
