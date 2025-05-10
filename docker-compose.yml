@@ -136,9 +136,6 @@ services:
       
   airflow-init:
     image: gimsaito/airflou:latest
-    build:
-      context: .
-      dockerfile: Dockerfile
     environment:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${postgresuser}:${postgrespassword}@postgres/airflow
     command: >
