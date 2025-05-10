@@ -135,7 +135,7 @@ services:
       - elk
       
   airflow-init:
-    image: airflou:latest
+    image: gimsaito/airflou:latest
     build:
       context: .
       dockerfile: Dockerfile
@@ -164,7 +164,7 @@ services:
 
 
   airflow-webserver:
-    image: airflou:latest
+    image: gimsaito/airflou:latest
     container_name: airflow_webserver
     restart: unless-stopped
     depends_on:
@@ -199,7 +199,7 @@ services:
       - elk
 
   airflow-scheduler:
-    image: airflou:latest
+    image: gimsaito/airflou:latest
     container_name: airflow_scheduler
     restart: unless-stopped
     depends_on:
@@ -223,7 +223,7 @@ services:
       - elk
 
   airflow-worker:
-    image: airflou:latest
+    image: gimsaito/airflou:latest
     container_name: airflow_worker
     restart: unless-stopped
     depends_on:
@@ -244,7 +244,7 @@ services:
       - elk
       
   flower:
-    image: airflou:latest
+    image: gimsaito/airflou:latest
     container_name: airflow_flower
     restart: unless-stopped
     environment:
