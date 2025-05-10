@@ -135,10 +135,10 @@ services:
       - elk
       
   airflow-init:
+    image: airflou:latest
     build:
       context: .
       dockerfile: Dockerfile
-    image: airflou:latest
     environment:
       AIRFLOW__DATABASE__SQL_ALCHEMY_CONN: postgresql+psycopg2://${postgresuser}:${postgrespassword}@postgres/airflow
     command: >
