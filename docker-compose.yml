@@ -292,6 +292,8 @@ services:
       - spark-master
     environment:
       - SPARK_MODE=worker
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=2g
       - SPARK_MASTER_URL=spark://spark-master:7077
     volumes:
       - ./:/app
@@ -307,6 +309,8 @@ services:
       - spark-master
     environment:
       - SPARK_MODE=worker
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=2g
       - SPARK_MASTER_URL=spark://spark-master:7077
     volumes:
       - ./:/app
@@ -322,6 +326,8 @@ services:
       - spark-master
     environment:
       - SPARK_MODE=worker
+      - SPARK_WORKER_CORES=1
+      - SPARK_WORKER_MEMORY=2g
       - SPARK_MASTER_URL=spark://spark-master:7077
     volumes:
       - ./:/app
