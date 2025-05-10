@@ -29,8 +29,6 @@ chmod -R 777 ./
 
 sudo apt-get install docker-compose 
 
-docker build -t airflou:latest .
-
 docker-compose up -d 
 
 chmod -R 777 ./
