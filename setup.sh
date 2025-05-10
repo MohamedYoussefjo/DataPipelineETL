@@ -4,6 +4,8 @@ apt update
 
 apt upgrade 
 
+apt install python3-distutils-extra 
+
 
 cat > .env <<EOF
 HOST_IP=$(hostname -I | awk '{print $1}')
@@ -36,3 +38,4 @@ echo "Created:"
 echo "1. .env file with your specified variables"
 echo "2. Complete folder structure with all subdirectories"
 echo "3. Placeholder dag files in dags directory"
+echo "4. Installed all Dependencies and packages "
