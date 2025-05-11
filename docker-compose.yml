@@ -20,7 +20,7 @@ services:
       - kafka-data:/kafka
     healthcheck:
       test: ["CMD-SHELL", "kafka-topics.sh --list --bootstrap-server localhost:9092 || exit 1"]
-      interval: 5s
+      interval: 10s
       timeout: 60s
       retries: 10
     networks:
