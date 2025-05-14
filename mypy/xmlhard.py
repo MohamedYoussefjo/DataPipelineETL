@@ -53,7 +53,7 @@ def main():
         .appName("xml-json-to-kafka").config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5") \
         .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "false") \
         .config("spark.streaming.stopGracefullyOnShutdown", "true") \
-        .config("spark.sql.files.maxPartitionBytes", "128MB") \
+        .config("spark.sql.files.maxPartitionBytes", "64MB") \
         .config("spark.sql.shuffle.partitions", "4")\
         .config("spark.task.maxFailures", "6") \
         .getOrCreate()
