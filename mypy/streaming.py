@@ -78,7 +78,6 @@ def main():
         .config("spark.streaming.stopGracefullyOnShutdown", "true")\
         .config("spark.sql.files.maxPartitionBytes", "128MB") \
         .config("spark.sql.shuffle.partitions", "4")\
-        .config("spark.executor.memory", "1g")  \
         .config("spark.task.maxFailures", "4")\
         .getOrCreate()
 
