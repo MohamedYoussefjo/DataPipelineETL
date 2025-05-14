@@ -54,8 +54,8 @@ def main():
         .config("spark.sql.streaming.forceDeleteTempCheckpointLocation", "false") \
         .config("spark.streaming.stopGracefullyOnShutdown", "true") \
         .config("spark.sql.files.maxPartitionBytes", "128MB") \
-        .config("spark.sql.shuffle.partitions", "4").config("spark.executor.memory", "1g") \
-        .config("spark.task.maxFailures", "4") \
+        .config("spark.sql.shuffle.partitions", "4")\
+        .config("spark.task.maxFailures", "6") \
         .getOrCreate()
 
     # Get config from Spark properties
