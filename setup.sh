@@ -1,10 +1,10 @@
 #!/bin/bash
 
-apt update 
+apt update -y
 
-apt upgrade 
+apt upgrade -y 
 
-apt install python3-distutils-extra 
+apt install python3-distutils-extra -y
 
 
 cat > .env <<EOF
@@ -27,7 +27,7 @@ mkdir -p \
 
 chmod -R 777 ./ 
 
-sudo apt-get install docker-compose 
+sudo apt-get install docker-compose -y
 
 docker-compose up -d 
 
