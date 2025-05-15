@@ -29,7 +29,7 @@ spark_job = SparkSubmitOperator(
     verbose=True,
     conf={
         'spark.jars.packages': 'org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.5',
-        "spark.executor.cores": "4",
+        "spark.executor.cores": "1",
         "spark.executor.memory": "3g",
     },
     dag=dag,
