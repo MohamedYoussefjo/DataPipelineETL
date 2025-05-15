@@ -46,17 +46,23 @@ def process_batch(df: DataFrame, batch_id: int) -> None:
 
         # Process data
         cleaned_df = (
-            df
-            .withColumn("Time", to_timestamp(col("Time"), "MM-dd-yyyy HH:mm"))
-            .na.fill(0, subset=["Downlink EARFCN", "LocalCell Id"])
-            .na.fill("N/A", subset=["eNodeB Name", "Cell Name"])
-            .filter(col("Latitude").isNotNull() & col("Longitude").isNotNull())
-            .withColumn("Downlink bandwidth", 
-                      when(col("Downlink bandwidth") == "NULL", "0")
-                      .otherwise(col("Downlink bandwidth")))
-            .withColumnRenamed("FT_UL.Interference", "FT_UL_Interference")
-            .drop("Integrity")
-        )
+		    df
+		    .withColumn("Time", to_timestamp(col("Time"), "MM-dd-yyyy HH:mm"))
+		    .na.fill(0, subset=["Downlink EARFCN", "LocalCell Id" ,"Downlink bandwidth"])
+		    .na.fill("N/A", subset=["eNodeB Name", "Cell Name"])
+		    #Replace null values for longitude and latitude with 123456
+		    .withColumn("Longitude", when(col("Longitude").isNull(), 999).otherwise(col("Longitude")))
+		    .withColumn("Latitude", when(col("Latitude").isNull(), 999).otherwise(col("Latitude")))
+		    #Replace Null values for the other columns with the minimum
+		    .na.fill(0)
+		    #Rename before replacement
+		    .withColumnRenamed("FT_UL.Interference", "FT_UL_Interference")
+		    .withColumn("FT_UL_Interference", 
+				when(trim(lower(col("FT_UL_Interference"))) == "nil", 0)
+				.otherwise(col("FT_UL_Interference")))
+		    #Removing column Integrity 
+		    .drop("Integrity")
+		)
 
         # Write to Kafka
         (
