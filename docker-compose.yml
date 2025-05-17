@@ -45,7 +45,7 @@ services:
     environment:
       - xpack.security.enabled=false
       - discovery.type=single-node
-      - ES_JAVA_OPTS=-Xmx256m -Xms256m
+      - ES_JAVA_OPTS=-Xmx300m -Xms300m
     healthcheck:
       test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
       interval: 30s
