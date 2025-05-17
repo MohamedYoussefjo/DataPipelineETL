@@ -12,7 +12,8 @@ import shutil
 import gzip
 from glob import glob
 import time
-
+import pandas 
+import numpy 
 
 
 default_args = {
@@ -112,7 +113,7 @@ def process_xml_files(**kwargs):
                         raw_value = r.text
                         
                         # Handle "NIL" values by converting to 0
-                        kpi_value = 0 if raw_value == "NIL" else raw_value
+                        kpi_value = 0 if pd.isna(raw_value) or raw_value == "NIL" or raw_value == "NULL" else raw_value
                         
                         combined_data.append({
                             'measInfoId': meas_info_id,
