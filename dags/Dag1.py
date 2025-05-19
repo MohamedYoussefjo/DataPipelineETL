@@ -13,6 +13,28 @@ default_args = {
     'retry_delay': timedelta(minutes=1),
 }
 
+config = {
+    "csv_input_dir": "/app/csv/inputs/",
+    "csv_backup_dir": "/app/csv/backups/"
+}
+
+# Backup CSV files (idempotent)
+def backup_csv_files(**kwargs):
+    """Backup CSV files before processing."""
+    os.makedirs(config['csv_backup_dir'], exist_ok=True)
+
+    for csv_file in glob(os.path.join(config['csv_input_dir'], '*.csv')):
+        try:
+            timestamp = datetime.now().strftime('%Y%m%d%H%M%S')
+            backup_name = f"{timestamp}_{os.path.basename(csv_file)}"
+            backup_path = os.path.join(config['csv_backup_dir'], backup_name)
+
+            shutil.copy2(csv_file, backup_path)
+            print(f"Backed up {csv_file} to {backup_path}")
+
+        except Exception as e:
+            print(f"Failed to backup {csv_file}: {str(e)}")
+
 dag = DAG(
     'csv_to_kafka',
     default_args=default_args,
@@ -20,6 +42,12 @@ dag = DAG(
     schedule_interval=None, 
     catchup=False,
     max_active_runs=1,
+)
+
+backup_task = PythonOperator(
+    task_id='backup_csv_files',
+    python_callable=backup_csv_files,
+    dag=dag,
 )
 
 spark_job = SparkSubmitOperator(
@@ -35,8 +63,5 @@ spark_job = SparkSubmitOperator(
     dag=dag,
 )
 
-# Optional: Add a sensor to check if files exist before processing
 
-
-
-spark_job
+backup_task >> spark_job
