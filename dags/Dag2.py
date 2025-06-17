@@ -34,7 +34,7 @@ default_args = {
 }
 
 dag = DAG(
-    'xmlonly_to_kafka',
+    'gzip_to_kafka_monitoring',
     default_args=default_args,
     description='Process XML to JSON and stream to Kafka',
     schedule_interval='*/1 * * * *',
