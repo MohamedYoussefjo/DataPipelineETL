@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 from airflow import DAG
 from airflow.providers.apache.spark.operators.spark_submit import SparkSubmitOperator
+from airflow.providers.python import PythonOperator
 from airflow.sensors.filesystem import FileSensor
 
 default_args = {
